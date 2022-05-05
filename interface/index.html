@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;1,200;1,500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Smart Home</title>
+</head>
+
+<body>
+    <div class="main">
+        <!-- toast message -->
+        <div class="toast-container">
+
+        </div>
+
+        <!-- end toast message -->
+
+        <!-- header -->
+        <div class="header">
+            <div class="nav">
+                <h1>DASHBOARD SMART HOME</h1>
+
+            </div>
+        </div>
+        <!-- end header -->
+
+        <!-- banner -->
+        <div class="body">
+
+            <div class="container">
+
+
+                <!-- device -->
+                <div class="device">
+                    <div class="device_header">
+
+                        <h2>My Device</h2>
+
+                    </div>
+                    <div class="device_detail">
+                        <div class="device_content">
+
+                            <div class="light_control_state">
+
+                                <span class="state_device">ON</span>
+
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+
+                            </div>
+                            <i class="fa-solid fa-lightbulb"></i>
+
+                            <div class="light_control_icon_device"></div>
+                            <div class="light_control_icon_name">Lights</div>
+
+                        </div>
+                        <div class="device_content">
+
+                            <div class="light_control_state">
+
+                                <span class="state_device">ON</span>
+
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+
+                            </div>
+                            <i class="fa-solid fa-lightbulb"></i>
+
+                            <div class="light_control_icon_device"></div>
+                            <div class="light_control_icon_name">Lights</div>
+
+                        </div>
+                        <div class="device_content">
+
+                            <div class="light_control_state">
+
+                                <span class="state_device">ON</span>
+
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+
+                            </div>
+                            <i class="fa-solid fa-lightbulb"></i>
+
+                            <div class="light_control_icon_device"></div>
+                            <div class="light_control_icon_name">Lights</div>
+
+                        </div>
+                        <div class="device_content">
+
+                            <div class="light_control_state">
+
+                                <span class="state_device">ON</span>
+
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+
+                            </div>
+                            <i class="fa-solid fa-lightbulb"></i>
+
+                            <div class="light_control_icon_device"></div>
+                            <div class="light_control_icon_name">Lights</div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- end device -->
+
+                <!-- chart -->
+                <div class="chart">
+                    <div class="chart_header">
+
+                        <h2>My Monitor</h2>
+
+                    </div>
+                    <!-- <div class="chart_detail">
+
+
+                        <iframe class="chart_content"
+                            src="https://thingspeak.com/channels/1666280/charts/1?bgcolor=%23FF9933&color=%23fff&dynamic=true&results=60&title=Temperature&type=line&xaxis=Time&yaxis=Value"></iframe>
+                        <iframe class="chart_content"
+                            src="https://thingspeak.com/channels/1666280/charts/2?bgcolor=%233399ff&color=%23fff&dynamic=true&results=60&title=Humidity&type=line&xaxis=Time&yaxis=Value"></iframe>
+                        <iframe class="chart_content"
+                            src="https://thingspeak.com/channels/1666280/charts/3?bgcolor=%23CCFFCC&color=%23F55945&dynamic=true&results=60&title=Light+Sensor&type=line&xaxis=Time&yaxis=Value"></iframe>
+                        <iframe class="chart_content"
+                            src="https://thingspeak.com/channels/1666280/charts/4?bgcolor=%23fff99&color=%23F55945&dynamic=true&results=60&title=Rain+Sensor&type=line&xaxis=Time&yaxis=Value"></iframe>
+                    </div> -->
+
+                    <div class="charts_wrap">
+                        <div class="chart_item">
+                            <div id="container_temp">
+                            </div>
+                        </div>
+                        <div class="chart_item">
+                            <div id="container_humi">
+                            </div>
+                        </div>
+                        <div class="chart_item">
+                            <div id="container_light">
+                            </div>
+                        </div>
+                        <div class="chart_item">
+                            <div id="container_rain">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- end chart -->
+            </div>
+
+
+        </div>
+
+        <!-- end side right -->
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"
+        type="text/javascript"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="./script.js"></script>
+</body>
+
+</html>
