@@ -2,57 +2,355 @@ const buttonToggle = document.querySelectorAll('.slider');
 const stateDevice = document.querySelectorAll('.state_device');
 const deviceContent = document.querySelectorAll('.device_content');
 
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+
+const firebaseConfig = {
+    apiKey: 'AIzaSyDGgnb24aRVuLa2kVq1k1hgKHnfnArXXl8',
+    authDomain: 'iotproject-fc1af.firebaseapp.com',
+    databaseURL:
+        'https://iotproject-fc1af-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'iotproject-fc1af',
+    storageBucket: 'iotproject-fc1af.appspot.com',
+    messagingSenderId: '1092610695725',
+    appId: '1:1092610695725:web:55d3fcc2a200ecacc24ea4',
+    measurementId: 'G-DY5FS87VWG',
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+import {
+    getAuth,
+    signInWithPopup,
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    signInWithEmailAndPassword,
+    signOut,
+} from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
+const provider = new GoogleAuthProvider();
+const auth = getAuth();
+// loggin
+
+const btnRegister = document.querySelector('.btn_register');
+const loginForm = document.querySelector('.login_form');
+const registerForm = document.querySelector('.register_form');
+const btnCreateAccount = document.querySelector('.btn_create_account');
+const btnLogin = document.querySelector('.btn_login');
+const buttonGG = document.querySelector('.google');
+const inputUsername = document.querySelector('.input_username');
+const inputEmail = document.querySelector('.input_email');
+const inputPWD = document.querySelector('.input_pwd');
+
+const inputLoginEmail = document.querySelector('.input_login_email');
+const inputLoginPWD = document.querySelector('.input_login_pwd');
+const opacity = document.querySelector('.opacity');
+
+const mainPage = document.querySelector('.main');
+const btnLogOut = document.querySelector('.log_out');
+console.log(inputLoginEmail);
+const authSuccess = () => {
+    mainPage.style.display = 'block';
+    loginForm.style.display = 'none';
+    opacity.style.display = 'none';
+};
+
+const authFail = () => {
+    mainPage.style.display = 'none';
+    loginForm.style.display = 'block';
+    opacity.style.display = 'block';
+};
+
+btnRegister.onclick = () => {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
+};
+
+btnCreateAccount.onclick = () => {
+    createUserWithEmailAndPassword(auth, inputEmail.value, inputPWD.value)
+        .then((userCredential) => {
+            // Signed in
+            updateProfile(auth.currentUser, {
+                displayName: inputUsername.value,
+            })
+                .then(() => {
+                    // Profile updated!
+
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+
+                    // ...
+                })
+                .catch((error) => {
+                    // alert(error.message);
+                });
+        })
+        .catch((error) => {
+            // alert(error.message);
+        });
+};
+buttonGG.onclick = () => {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+
+            // The signed-in user info.
+            const user = result.user;
+            console.log(user);
+            authSuccess();
+            // ...
+        })
+        .catch((error) => {
+            // Handle Errors here.
+            // alert(error.message);
+            // ...
+        });
+};
+
+btnLogin.onclick = () => {
+    signInWithEmailAndPassword(auth, inputLoginEmail.value, inputLoginPWD.value)
+        .then((userCredential) => {
+            // Signed in
+            console.log('dang nhap thanh cog');
+
+            const user = userCredential.user;
+            console.log(user);
+            authSuccess();
+
+            // ...
+        })
+        .catch((error) => {
+            console.log('dang nhap that bai');
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
+};
+
+btnLogOut.onclick = () => {
+    signOut(auth)
+        .then(() => {
+            authFail();
+        })
+        .catch((error) => {
+            // An error happened.
+        });
+};
+
+// end loggin
 // chart
 
-/*
 /// theme chart
 Highcharts.theme = {
     colors: [
-        '#058DC7',
-        '#50B432',
-        '#ED561B',
-        '#DDDF00',
-        '#24CBE5',
-        '#64E572',
-        '#FF9655',
-        '#FFF263',
-        '#6AF9C4',
+        '#2b908f',
+        '#90ee7e',
+        '#f45b5b',
+        '#7798BF',
+        '#aaeeee',
+        '#ff0066',
+        '#eeaaee',
+        '#55BF3B',
+        '#DF5353',
+        '#7798BF',
+        '#aaeeee',
     ],
     chart: {
         backgroundColor: {
-            linearGradient: [0, 0, 500, 500],
+            linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
             stops: [
-                [0, 'rgb(255, 255, 255)'],
-                [1, 'rgb(240, 240, 255)'],
+                [0, '#2a2a2b'],
+                [1, '#3e3e40'],
             ],
         },
+        style: {
+            fontFamily: "'Unica One', sans-serif",
+        },
+        plotBorderColor: '#606063',
     },
     title: {
         style: {
-            color: '#000',
-            font: 'bold 16px "Trebuchet MS", Verdana, sans-serif',
+            color: '#E0E0E3',
+            // textTransform: 'uppercase',
+            fontSize: '20px',
         },
     },
     subtitle: {
         style: {
-            color: '#666666',
-            font: 'bold 12px "Trebuchet MS", Verdana, sans-serif',
+            color: '#E0E0E3',
+            textTransform: 'uppercase',
+        },
+    },
+    xAxis: {
+        gridLineColor: '#707073',
+        labels: {
+            style: {
+                color: '#E0E0E3',
+            },
+        },
+        lineColor: '#707073',
+        minorGridLineColor: '#505053',
+        tickColor: '#707073',
+        title: {
+            style: {
+                color: '#A0A0A3',
+            },
+        },
+    },
+    yAxis: {
+        gridLineColor: '#707073',
+        labels: {
+            style: {
+                color: '#E0E0E3',
+            },
+        },
+        lineColor: '#707073',
+        minorGridLineColor: '#505053',
+        tickColor: '#707073',
+        tickWidth: 1,
+        title: {
+            style: {
+                color: '#A0A0A3',
+            },
+        },
+    },
+    tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        style: {
+            color: '#F0F0F0',
+        },
+    },
+    plotOptions: {
+        series: {
+            dataLabels: {
+                color: '#F0F0F3',
+                style: {
+                    fontSize: '13px',
+                },
+            },
+            marker: {
+                lineColor: '#333',
+            },
+        },
+        boxplot: {
+            fillColor: '#505053',
+        },
+        candlestick: {
+            lineColor: 'white',
+        },
+        errorbar: {
+            color: 'white',
         },
     },
     legend: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         itemStyle: {
-            font: '9pt Trebuchet MS, Verdana, sans-serif',
-            color: 'black',
+            color: '#E0E0E3',
         },
         itemHoverStyle: {
-            color: 'gray',
+            color: '#FFF',
         },
+        itemHiddenStyle: {
+            color: '#606063',
+        },
+        title: {
+            style: {
+                color: '#C0C0C0',
+            },
+        },
+    },
+    credits: {
+        style: {
+            color: '#666',
+        },
+    },
+    labels: {
+        style: {
+            color: '#707073',
+        },
+    },
+    drilldown: {
+        activeAxisLabelStyle: {
+            color: '#F0F0F3',
+        },
+        activeDataLabelStyle: {
+            color: '#F0F0F3',
+        },
+    },
+    navigation: {
+        buttonOptions: {
+            symbolStroke: '#DDDDDD',
+            theme: {
+                fill: '#505053',
+            },
+        },
+    },
+    // scroll charts
+    rangeSelector: {
+        buttonTheme: {
+            fill: '#505053',
+            stroke: '#000000',
+            style: {
+                color: '#CCC',
+            },
+            states: {
+                hover: {
+                    fill: '#707073',
+                    stroke: '#000000',
+                    style: {
+                        color: 'white',
+                    },
+                },
+                select: {
+                    fill: '#000003',
+                    stroke: '#000000',
+                    style: {
+                        color: 'white',
+                    },
+                },
+            },
+        },
+        inputBoxBorderColor: '#505053',
+        inputStyle: {
+            backgroundColor: '#333',
+            color: 'silver',
+        },
+        labelStyle: {
+            color: 'silver',
+        },
+    },
+    navigator: {
+        handles: {
+            backgroundColor: '#666',
+            borderColor: '#AAA',
+        },
+        outlineColor: '#CCC',
+        maskFill: 'rgba(255,255,255,0.1)',
+        series: {
+            color: '#7798BF',
+            lineColor: '#A6C7ED',
+        },
+        xAxis: {
+            gridLineColor: '#505053',
+        },
+    },
+    scrollbar: {
+        barBackgroundColor: '#808083',
+        barBorderColor: '#808083',
+        buttonArrowColor: '#CCC',
+        buttonBackgroundColor: '#606063',
+        buttonBorderColor: '#606063',
+        rifleColor: '#FFF',
+        trackBackgroundColor: '#404043',
+        trackBorderColor: '#404043',
     },
 };
 // Apply the theme
 Highcharts.setOptions(Highcharts.theme);
 // end theme
-*/
+
+let chart, chart_humidity, chart_light, chart_rain;
+
 chart = new Highcharts.Chart({
     chart: {
         spacingRight: 30,
@@ -114,26 +412,14 @@ chart = new Highcharts.Chart({
         {
             name: 'Temperature',
             data: [],
-            // data: (function () {
-            //     // generate an array of random data
-            //     var data = [],
-            //         time = new Date().getTime(),
-            //         i;
-
-            //     for (i = -9; i <= 0; i += 1) {
-            //         data.push({
-            //             x: time + i * 5000,
-            //             y: 5,
-            //         });
-            //     }
-            //     return data;
-            // })(),
         },
     ],
 });
 
 chart_humidity = new Highcharts.Chart({
     chart: {
+        spacingRight: 30,
+        spacingTop: 20,
         renderTo: 'container_humi',
         defaultSeriesType: 'spline',
         events: {
@@ -211,6 +497,8 @@ chart_humidity = new Highcharts.Chart({
 
 chart_light = new Highcharts.Chart({
     chart: {
+        spacingRight: 30,
+        spacingTop: 20,
         renderTo: 'container_light',
         defaultSeriesType: 'spline',
         events: {
@@ -288,6 +576,8 @@ chart_light = new Highcharts.Chart({
 
 chart_rain = new Highcharts.Chart({
     chart: {
+        spacingRight: 30,
+        spacingTop: 20,
         renderTo: 'container_rain',
         defaultSeriesType: 'spline',
         events: {
@@ -341,7 +631,7 @@ chart_rain = new Highcharts.Chart({
 
 async function dataChartTemperature(value) {
     var time = new Date().getTime();
-    const point = [time, value];
+    const point = await [time, value];
     const series = chart.series[0],
         shift = series.data.length > 20; // shift if the series is longer than 20
     // // add the point
@@ -350,7 +640,7 @@ async function dataChartTemperature(value) {
 
 async function dataChartHumidity(value) {
     var time = new Date().getTime();
-    const point = [time, value];
+    const point = await [time, value];
     const series = chart_humidity.series[0],
         shift = series.data.length > 20; // shift if the series is longer than 20
     // // add the point
@@ -359,7 +649,7 @@ async function dataChartHumidity(value) {
 
 async function dataChartLight(value) {
     var time = new Date().getTime();
-    const point = [time, value];
+    const point = await [time, value];
     const series = chart_light.series[0],
         shift = series.data.length > 20; // shift if the series is longer than 20
     // // add the point
@@ -368,7 +658,7 @@ async function dataChartLight(value) {
 
 async function dataChartRain(value) {
     var time = new Date().getTime();
-    const point = [time, value];
+    const point = await [time, value];
     const series = chart_rain.series[0],
         shift = series.data.length > 20; // shift if the series is longer than 20
     // // add the point
@@ -485,16 +775,16 @@ function onConnect() {
     //sự kiên kết nối thành công
     console.log('Connect succesful');
 
-    // client.subscribe('Data_sensor_node1_1');
-    // client.subscribe('Data_sensor_node1_2');
-    // client.subscribe('Data_sensor_node2');
-    // client.subscribe('Data_esp_node3');
+    client.subscribe('Data_sensor_node1_1');
+    client.subscribe('Data_sensor_node1_2');
+    client.subscribe('Data_sensor_node2');
+    client.subscribe('Data_esp_node3');
 
-    client.subscribe('Data_sensor_humi');
-    client.subscribe('Data_sensor_temp');
-    client.subscribe('Data_sensor_rain');
-    client.subscribe('Data_sensor_light');
-    client.subscribe('Data_esp');
+    // client.subscribe('Data_sensor_humi');
+    // client.subscribe('Data_sensor_temp');
+    // client.subscribe('Data_sensor_rain');
+    // client.subscribe('Data_sensor_light');
+    // client.subscribe('Data_esp');
 }
 
 // called when the client loses its connection
@@ -531,14 +821,14 @@ function onMessageArrived(message) {
 
     //////////////////////////
 
-    // if (message.destinationName == 'Data_sensor_node1_1') {
-    //     dataChartTemperature(parseInt(message.payloadString));
-    // } else if (message.destinationName == 'Data_sensor_node1_2') {
-    //     dataChartHumidity(parseInt(message.payloadString));
-    // }
+    if (message.destinationName == 'Data_sensor_node1_1') {
+        dataChartTemperature(parseInt(message.payloadString));
+    } else if (message.destinationName == 'Data_sensor_node1_2') {
+        dataChartHumidity(parseInt(message.payloadString));
+    }
 }
 
-function public(topic, data) {
+function public_message(topic, data) {
     message = new Paho.MQTT.Message(data);
     message.destinationName = topic;
     client.send(message);
@@ -551,10 +841,10 @@ buttonToggle.forEach((item, index) => {
         deviceContent[index].classList.toggle('disabled');
         if (deviceContent[index].classList.contains('disabled')) {
             stateDevice[index].innerHTML = 'OFF';
-            public('Data_control', 'OFF_' + index);
+            public_message('Data_control', 'OFF_' + index);
         } else {
             stateDevice[index].innerHTML = 'ON';
-            public('Data_control', 'ON_' + index);
+            public_message('Data_control', 'ON_' + index);
         }
     };
 });

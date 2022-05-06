@@ -16,6 +16,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Smart Home</title>
 </head>
 
@@ -33,7 +35,16 @@
             <div class="nav">
                 <h1>DASHBOARD SMART HOME</h1>
 
+                <h3>Welcome to Dashboard Smart Home Team One</h3>
             </div>
+            <div class="avartar">
+                <img src="./img/user1.jpg" alt="">
+                <div class="name_user">Thanh Dai</div>
+
+                <p class="log_out">Sign Out</p>
+
+            </div>
+
         </div>
         <!-- end header -->
 
@@ -132,7 +143,7 @@
                 <div class="chart">
                     <div class="chart_header">
 
-                        <h2>My Monitor</h2>
+                        <h2>My Monitoring</h2>
 
                     </div>
                     <!-- <div class="chart_detail">
@@ -174,8 +185,103 @@
 
         </div>
 
-        <!-- end side right -->
+        <!-- end opacity -->
+
+        <p style="text-align:center;">Design by NTĐ</p>
     </div>
+    <!-- modal login -->
+    <div class="logo_iuh">
+        <!-- <img src="./img/Logo-IUH_2.jpg" alt="" class="logo_iuh"> -->
+    </div>
+    <div class="login_form">
+        <div class="container">
+            <div>
+                <div class="row">
+                    <h2 class="loggin_title">LOGIN FORM
+                    </h2>
+                    <!-- <div class="vl">
+                        <span class="vl-innertext">OR</span>
+                    </div> -->
+                    <div class="col">
+
+
+                        <input class="input_login_email" type="text" name="email"
+                            placeholder="Email" required>
+                        <input class="input_login_pwd" type="password" name="password"
+                            placeholder="Password" required>
+                        <div class="button_group">
+                            <input type="button" value="Login" class="btn_login">
+                            <input type="button" value="Register" class="btn_register">
+
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="hide-md-lg" style="color: black;">
+                            <p>Or Login With</p>
+                        </div>
+                        <div class="btn_social_loggin">
+
+                            <div href="#" class="fb btn">
+                                <i class="fa fa-facebook fa-fw"></i> Login with Facebook
+                            </div>
+
+                            <div href="#" class="google btn"><i class="fa fa-google fa-fw">
+                                </i> Login with Google+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="bottom-container">
+            <div class="row">
+                <div class="col">
+                    <a href="#" style="color:white" class="btn">Sign up</a>
+                </div>
+                <div class="col">
+                    <a href="#" style="color:white" class="btn">Forgot password?</a>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <!-- end modal login -->
+
+    <!-- register form -->
+    <div class="register_form">
+        <div class="container">
+            <form>
+                <div class="row">
+                    <h2 style="text-align:center; color: black; margin-bottom: 30px;"> REGISTER FORM
+                    </h2>
+
+
+                    <input class="input_username" type="text" name="username" placeholder="Username"
+                        required>
+                    <input class="input_email" type="text" name="email" placeholder="Email"
+                        required>
+                    <input class="input_pwd" type="password" name="password" placeholder="Password"
+                        required>
+                    <!-- <input type="password" name="password" placeholder="Repeat Password" required> -->
+                    <div class="button_group">
+
+                        <input type="button" value="Create Account" class="btn_create_account">
+
+                    </div>
+                </div>
+
+        </div>
+        </form>
+    </div>
+
+
+    </div>
+    <!-- end register  -->
+    <!-- opacity -->
+    <div class="opacity"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"
         type="text/javascript"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -183,7 +289,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <script src="./script.js"></script>
+    <script src="./script.js" type="module"></script>
 </body>
 
 </html>
