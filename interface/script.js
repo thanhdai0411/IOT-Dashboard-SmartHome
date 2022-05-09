@@ -27,10 +27,105 @@ import {
     updateProfile,
     signInWithEmailAndPassword,
     signOut,
+    setPersistence,
+    browserSessionPersistence,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
+
+// toast message
+
+function toast({ header = '', description = '', type = '', duration = 3000 }) {
+    var main = document.querySelector('.toast-container');
+    if (main) {
+        // tạo một thẻ div ở trong  main
+        const toast = document.createElement('div');
+        toast.classList.add('toast', `toast--${type}`);
+
+        //auto xoa toast
+        const autoRemove = setTimeout(function () {
+            main.removeChild(toast);
+        }, duration + 1000);
+
+        // click xoa toast
+        toast.onclick = function (e) {
+            if (e.target.closest('.toast__icon-close')) {
+                main.removeChild(toast);
+                clearTimeout(autoRemove);
+            }
+        };
+
+        const icons = {
+            success: 'fas fa-check-circle',
+            info: 'fas fa-info-circle',
+            warn: 'fas fa-exclamation-circle',
+        };
+        // lấy ra icon tương ứng với type
+        const icon = icons[type];
+
+        const delay = (duration / 1000).toFixed(2);
+
+        toast.style.animation = `slideInLeft ease-in-out .3s, fadeOut linear 1s ${delay}s forwards`;
+
+        // Viết vào thẻ div đã add thêm class
+        toast.innerHTML = `
+            <div class="toast__icon toast__icon-${type}">
+                <i class="${icon}"></i>
+            </div>  
+            <div class="toast__content">
+                <h3 class="toast__header">${header}</h3>
+                
+                <p class="toast__ders">${description} </p>
+            </div>
+            <div class="toast__icon toast__icon-close">
+                <i class="fas fa-times"></i>
+            </div>
+        `;
+        // nối  toast mới ghi vào - > class toast-container
+        main.appendChild(toast);
+    }
+}
+
+function isSuccessToast(header, description, duration) {
+    toast({
+        header: header,
+        description: description,
+        type: 'success',
+        duration: duration,
+    });
+}
+function isWarnToast(header, description, duration) {
+    // toast({
+    //     header: 'Cảnh báo',
+    //     description: 'Có người đột nhập!',
+    //     type: 'warn',
+    //     duration: 5000,
+    // });
+    toast({
+        header: header,
+        description: description,
+        type: 'warn',
+        duration: duration,
+    });
+}
+function isInfoToast() {
+    toast({
+        header: 'Lỗi !!!',
+        description: 'Nhập sai thông tin ! Xin nhập lại',
+        type: 'info',
+        duration: 2000,
+    });
+    // toast({
+    //     header: header,
+    //     description: description,
+    //     type: 'info',
+    //     duration: duration,
+    // });
+}
+
+// end toast message
+
 // loggin
 
 const btnRegister = document.querySelector('.btn_register');
@@ -45,11 +140,16 @@ const inputPWD = document.querySelector('.input_pwd');
 
 const inputLoginEmail = document.querySelector('.input_login_email');
 const inputLoginPWD = document.querySelector('.input_login_pwd');
+const inputImg = document.querySelector('.input_img');
 const opacity = document.querySelector('.opacity');
 
 const mainPage = document.querySelector('.main');
 const btnLogOut = document.querySelector('.log_out');
-console.log(inputLoginEmail);
+
+const nameUser = document.querySelector('.name_user');
+const title_dashboard = document.querySelector('.title_dashboard');
+const avtUser = document.querySelector('.avt-user');
+
 const authSuccess = () => {
     mainPage.style.display = 'block';
     loginForm.style.display = 'none';
@@ -62,6 +162,16 @@ const authFail = () => {
     opacity.style.display = 'block';
 };
 
+auth.onAuthStateChanged(function (user) {
+    if (user) {
+        authSuccess();
+        console.log('User login: ', user.displayName);
+        nameUser.innerHTML = user.displayName;
+        title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
+        if (user.photoURL != null) avtUser.src = user.photoURL;
+    }
+});
+
 btnRegister.onclick = () => {
     loginForm.style.display = 'none';
     registerForm.style.display = 'block';
@@ -71,59 +181,78 @@ btnCreateAccount.onclick = () => {
     createUserWithEmailAndPassword(auth, inputEmail.value, inputPWD.value)
         .then((userCredential) => {
             // Signed in
+
             updateProfile(auth.currentUser, {
                 displayName: inputUsername.value,
             })
                 .then(() => {
-                    // Profile updated!
-
+                    // alert('Dang k itahnh cong');
+                    isSuccessToast('Thành Công', 'Đăng ký thành công', 3000);
                     loginForm.style.display = 'block';
                     registerForm.style.display = 'none';
 
                     // ...
                 })
                 .catch((error) => {
-                    // alert(error.message);
+                    isWarnToast('Thất Bại', 'Đăng ký thất bại', 3000);
+                    alert(error.message);
                 });
         })
         .catch((error) => {
             // alert(error.message);
         });
 };
+setPersistence(auth, browserSessionPersistence)
+    .then(() => {
+        // Existing and future Auth states are now persisted in the current
+        // session only. Closing the window would clear any existing state even
+        // if a user forgets to sign out.
+        // ...
+        // New sign-in will be persisted with session persistence.
+        return signInWithEmailAndPassword(auth, email, password);
+    })
+    .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+    });
 buttonGG.onclick = () => {
     signInWithPopup(auth, provider)
         .then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
+            isSuccessToast('Thành Công', 'Đăng nhập thành công', 3000);
 
-            // The signed-in user info.
             const user = result.user;
             console.log(user);
             authSuccess();
+            // const name = localStorage.getItem('user');
+            nameUser.innerHTML = user.displayName;
+            title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
+            avtUser.src = user.photoURL;
             // ...
         })
         .catch((error) => {
-            // Handle Errors here.
-            // alert(error.message);
-            // ...
+            isWarnToast('Thất Bại', 'Đăng nhập không thành công', 3000);
         });
 };
 
 btnLogin.onclick = () => {
     signInWithEmailAndPassword(auth, inputLoginEmail.value, inputLoginPWD.value)
-        .then((userCredential) => {
-            // Signed in
+        .then((result) => {
             console.log('dang nhap thanh cog');
-
-            const user = userCredential.user;
-            console.log(user);
+            isSuccessToast('Thành Công', 'Đăng nhập thành công', 3000);
+            const user = result.user;
+            localStorage.setItem('user', user.displayName);
             authSuccess();
+            nameUser.innerHTML = user.displayName;
+            title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
 
             // ...
         })
         .catch((error) => {
             console.log('dang nhap that bai');
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            isWarnToast('Thất Bại', 'Đăng nhập không thành công', 3000);
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
         });
 };
 
@@ -138,6 +267,10 @@ btnLogOut.onclick = () => {
 };
 
 // end loggin
+
+// load-info-user
+
+// end load-info-user
 // chart
 
 /// theme chart
@@ -412,6 +545,13 @@ chart = new Highcharts.Chart({
         {
             name: 'Temperature',
             data: [],
+            color: {
+                radialGradient: { cx: 0.5, cy: 0.5, r: 0.5 },
+                stops: [
+                    [0, '#003399'],
+                    [1, '#3366AA'],
+                ],
+            },
         },
     ],
 });
@@ -477,20 +617,6 @@ chart_humidity = new Highcharts.Chart({
         {
             name: 'Humidity',
             data: [],
-            // data: (function () {
-            //     // generate an array of random data
-            //     var data = [],
-            //         time = new Date().getTime(),
-            //         i;
-
-            //     for (i = -9; i <= 0; i += 1) {
-            //         data.push({
-            //             x: time + i * 5000,
-            //             y: 5,
-            //         });
-            //     }
-            //     return data;
-            // })(),
         },
     ],
 });
@@ -556,20 +682,6 @@ chart_light = new Highcharts.Chart({
         {
             name: 'Light Sensor',
             data: [],
-            // data: (function () {
-            //     // generate an array of random data
-            //     var data = [],
-            //         time = new Date().getTime(),
-            //         i;
-
-            //     for (i = -9; i <= 0; i += 1) {
-            //         data.push({
-            //             x: time + i * 5000,
-            //             y: 5,
-            //         });
-            //     }
-            //     return data;
-            // })(),
         },
     ],
 });
@@ -665,78 +777,6 @@ async function dataChartRain(value) {
     chart_rain.series[0].addPoint(point, true, shift);
 }
 
-// toast message
-
-function toast({ header = '', description = '', type = '', duration = 3000 }) {
-    var main = document.querySelector('.toast-container');
-    if (main) {
-        // tạo một thẻ div ở trong  main
-        const toast = document.createElement('div');
-        toast.classList.add('toast', `toast--${type}`);
-
-        //auto xoa toast
-        const autoRemove = setTimeout(function () {
-            main.removeChild(toast);
-        }, duration + 1000);
-
-        // click xoa toast
-        toast.onclick = function (e) {
-            if (e.target.closest('.toast__icon-close')) {
-                main.removeChild(toast);
-                clearTimeout(autoRemove);
-            }
-        };
-
-        const icons = {
-            success: 'fas fa-check-circle',
-            info: 'fas fa-info-circle',
-            warn: 'fas fa-exclamation-circle',
-        };
-        // lấy ra icon tương ứng với type
-        const icon = icons[type];
-
-        const delay = (duration / 1000).toFixed(2);
-
-        toast.style.animation = `slideInLeft ease-in-out .3s, fadeOut linear 1s ${delay}s forwards`;
-
-        // Viết vào thẻ div đã add thêm class
-        toast.innerHTML = `
-            <div class="toast__icon toast__icon-${type}">
-                <i class="${icon}"></i>
-            </div>  
-            <div class="toast__content">
-                <h3 class="toast__header">${header}</h3>
-                
-                <p class="toast__ders">${description} </p>
-            </div>
-            <div class="toast__icon toast__icon-close">
-                <i class="fas fa-times"></i>
-            </div>
-        `;
-        // nối  toast mới ghi vào - > class toast-container
-        main.appendChild(toast);
-    }
-}
-
-function isSuccessToast() {
-    toast({
-        header: 'Thành công',
-        description: 'Chào mừng bạn vào nhà!',
-        type: 'success',
-        duration: 5000,
-    });
-}
-function isWarnToast() {
-    toast({
-        header: 'Cảnh báo',
-        description: 'Có người đột nhập!',
-        type: 'warn',
-        duration: 5000,
-    });
-}
-
-// end toast message
-
 // mqtt
 
 function makeid() {
@@ -775,16 +815,16 @@ function onConnect() {
     //sự kiên kết nối thành công
     console.log('Connect succesful');
 
-    client.subscribe('Data_sensor_node1_1');
-    client.subscribe('Data_sensor_node1_2');
-    client.subscribe('Data_sensor_node2');
-    client.subscribe('Data_esp_node3');
+    // client.subscribe('Data_sensor_node1_1');
+    // client.subscribe('Data_sensor_node1_2');
+    // client.subscribe('Data_sensor_node2');
+    // client.subscribe('Data_esp_node3');
 
-    // client.subscribe('Data_sensor_humi');
-    // client.subscribe('Data_sensor_temp');
-    // client.subscribe('Data_sensor_rain');
-    // client.subscribe('Data_sensor_light');
-    // client.subscribe('Data_esp');
+    client.subscribe('Data_sensor_humi');
+    client.subscribe('Data_sensor_temp');
+    client.subscribe('Data_sensor_rain');
+    client.subscribe('Data_sensor_light');
+    client.subscribe('Data_esp');
 }
 
 // called when the client loses its connection
@@ -812,20 +852,20 @@ function onMessageArrived(message) {
         console.log('ESP Control');
         if (parseInt(message.payloadString) == 2) {
             console.warn('Có người cố ý muốn vào nhà !!');
-            isWarnToast();
+            isWarnToast('Cảnh báo', 'Có người cố ý muốn vào nhà', 5000);
         } else if (parseInt(message.payloadString) == 1) {
             console.log('Chào mừng bạn vào nhà');
-            isSuccessToast();
+            isSuccessToast('Thành Công', 'Chào mừng bạn vào nhà', 5000);
         }
     }
 
     //////////////////////////
 
-    if (message.destinationName == 'Data_sensor_node1_1') {
-        dataChartTemperature(parseInt(message.payloadString));
-    } else if (message.destinationName == 'Data_sensor_node1_2') {
-        dataChartHumidity(parseInt(message.payloadString));
-    }
+    // if (message.destinationName == 'Data_sensor_node1_1') {
+    //     dataChartTemperature(parseInt(message.payloadString));
+    // } else if (message.destinationName == 'Data_sensor_node1_2') {
+    //     dataChartHumidity(parseInt(message.payloadString));
+    // }
 }
 
 function public_message(topic, data) {

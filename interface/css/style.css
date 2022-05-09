@@ -32,40 +32,35 @@ h1 {
 html {
   font-family: 'Poppins', sans-serif; }
 
-.main {
-  display: none;
-  padding: 30px 40px;
-  /* toast--success */
-  /* toast warn */
-  /* toast__info */ }
+.toast-container {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  z-index: 1;
+  z-index: 100000000000000; }
   @media (max-width: 480px) {
-    .main {
-      padding: 10px; } }
-  .main .toast-container {
-    position: fixed;
-    top: 100px;
-    right: 40px;
-    z-index: 1; }
-    @media (max-width: 480px) {
-      .main .toast-container {
-        right: 20px; } }
-  .main .toast {
-    display: flex;
-    /* justify-content: center; */
-    align-items: center;
-    padding: 12px 15px;
-    border-radius: 3px;
-    box-shadow: 0 0 10px 5px #ccc;
-    /* min-width: 300px; */
-    width: 350px;
-    background-color: white;
-    transition: all linear 0.3s; }
-    @media (max-width: 480px) {
-      .main .toast {
-        width: 230px;
-        padding: 8px; } }
-  .main .toast + .toast {
-    margin-top: 30px; }
+    .toast-container {
+      right: 20px; } }
+
+.toast {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px 5px #ccc;
+  z-index: 10000000000000;
+  /* min-width: 300px; */
+  width: 350px;
+  background-color: white;
+  transition: all linear 0.3s; }
+  @media (max-width: 480px) {
+    .toast {
+      width: 230px;
+      padding: 8px; } }
+
+.toast + .toast {
+  margin-top: 30px; }
 
 @keyframes slideInLeft {
   from {
@@ -78,51 +73,72 @@ html {
 @keyframes fadeOut {
   to {
     opacity: 0; } }
-  .main .toast__content {
-    flex-grow: 1;
-    padding-left: 20px;
-    padding-right: 40px; }
-    @media (max-width: 480px) {
-      .main .toast__content {
-        padding: 0; } }
-  .main .toast__header {
-    padding-bottom: 5px;
-    color: black; }
-    @media (max-width: 480px) {
-      .main .toast__header {
-        font-size: 13px;
-        padding-bottom: 2px; } }
-  .main .toast__ders {
-    color: #96979b; }
-    @media (max-width: 480px) {
-      .main .toast__ders {
-        font-size: 12px; } }
-  .main .toast__icon {
-    font-size: 30px; }
-    @media (max-width: 480px) {
-      .main .toast__icon {
-        font-size: 20px;
-        padding-right: 8px; } }
-  .main .toast__icon-close {
-    color: #ccc;
-    font-size: 25px;
-    cursor: pointer; }
-    @media (max-width: 480px) {
-      .main .toast__icon-close {
-        font-size: 20px;
-        padding-right: 0px; } }
-  .main .toast--success {
-    border-left: 5px solid #2dbb2d; }
-  .main .toast__icon-success {
-    color: #2dbb2d; }
-  .main .toast--warn {
-    border-left: 5px solid orange; }
-  .main .toast__icon-warn {
-    color: orange; }
-  .main .toast--info {
-    border-left: 5px solid #2f86eb; }
-  .main .toast__icon-info {
-    color: #2f86eb; }
+
+.toast__content {
+  flex-grow: 1;
+  padding-left: 20px;
+  padding-right: 40px; }
+  @media (max-width: 480px) {
+    .toast__content {
+      padding: 0; } }
+
+.toast__header {
+  padding-bottom: 5px;
+  color: black; }
+  @media (max-width: 480px) {
+    .toast__header {
+      font-size: 13px;
+      padding-bottom: 2px; } }
+
+.toast__ders {
+  color: #96979b; }
+  @media (max-width: 480px) {
+    .toast__ders {
+      font-size: 12px; } }
+
+.toast__icon {
+  font-size: 30px; }
+  @media (max-width: 480px) {
+    .toast__icon {
+      font-size: 20px;
+      padding-right: 8px; } }
+
+.toast__icon-close {
+  color: #ccc;
+  font-size: 25px;
+  cursor: pointer; }
+  @media (max-width: 480px) {
+    .toast__icon-close {
+      font-size: 20px;
+      padding-right: 0px; } }
+
+/* toast--success */
+.toast--success {
+  border-left: 5px solid #2dbb2d; }
+
+.toast__icon-success {
+  color: #2dbb2d; }
+
+/* toast warn */
+.toast--warn {
+  border-left: 5px solid orange; }
+
+.toast__icon-warn {
+  color: orange; }
+
+/* toast__info */
+.toast--info {
+  border-left: 5px solid #2f86eb; }
+
+.toast__icon-info {
+  color: #2f86eb; }
+
+.main {
+  display: none;
+  padding: 30px 40px; }
+  @media (max-width: 480px) {
+    .main {
+      padding: 6px; } }
 
 .opacity {
   position: fixed;
@@ -130,9 +146,10 @@ html {
   right: 0;
   bottom: 0;
   left: 0;
-  background-image: url("/img/bgc2.jpg");
+  background-image: url("/img/iot_2.webp");
   opacity: 0.5;
-  background-position: center;
+  /* Center the image */
+  background-position: left;
   /* Center the image */
   background-repeat: no-repeat;
   /* Do not repeat the image */
@@ -188,17 +205,20 @@ html {
   /* text inside the vertical line */
   /* hide some text on medium and large screens */
   /* bottom container */ }
+  .login_form .btn_create_account,
+  .register_form .btn_create_account {
+    margin: 0 !important; }
   .login_form .loggin_title,
   .register_form .loggin_title {
     text-align: center;
-    color: black;
+    color: white;
     margin-bottom: 20px;
     font-size: 30px; }
   .login_form .container,
   .register_form .container {
     position: relative;
     border-radius: 10px;
-    background-color: #f2f2f2;
+    background-color: transparent;
     border: 1px solid white;
     padding: 20px 0 30px 0;
     width: 550px;
@@ -357,6 +377,7 @@ html {
     font-weight: normal; }
     @media (max-width: 480px) {
       .header h3 {
+        margin-top: 5px;
         font-size: 14px; } }
   .header .avartar {
     display: flex;
@@ -375,11 +396,14 @@ html {
           height: 50px; } }
     .header .avartar .name_user {
       margin-right: 30px;
-      font-size: 20px; }
+      font-size: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
       @media (max-width: 480px) {
         .header .avartar .name_user {
-          font-size: 10px;
-          margin-right: 5px; } }
+          font-size: 16px;
+          margin-right: 13px; } }
     .header .avartar .log_out {
       display: none;
       position: absolute;
@@ -405,9 +429,6 @@ html {
       padding: 5px; } }
   .body .container {
     width: 100%; }
-    @media (max-width: 480px) {
-      .body .container {
-        margin-top: 40px; } }
     .body .container .chart #container_temp,
     .body .container .chart #container_light,
     .body .container .chart #container_humi,

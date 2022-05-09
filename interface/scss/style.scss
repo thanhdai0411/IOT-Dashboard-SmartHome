@@ -42,139 +42,140 @@ html {
     font-family: 'Poppins', sans-serif;
 }
 
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    z-index: 1;
+    z-index: 100000000000000;
+    @include mobile {
+        right: 20px;
+    }
+}
+
+.toast {
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 3px;
+    box-shadow: 0 0 10px 5px #ccc;
+    z-index: 10000000000000;
+    /* min-width: 300px; */
+    width: 350px;
+    background-color: white;
+    transition: all linear 0.3s;
+
+    @include mobile {
+        width: 230px;
+        padding: 8px;
+    }
+}
+
+.toast + .toast {
+    margin-top: 30px;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(calc(100% + 40px));
+    }
+
+    to {
+        opacity: 1;
+        transform: 0;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+.toast__content {
+    flex-grow: 1;
+    padding-left: 20px;
+    padding-right: 40px;
+
+    @include mobile {
+        padding: 0;
+    }
+}
+
+.toast__header {
+    padding-bottom: 5px;
+    color: black;
+
+    @include mobile {
+        font-size: 13px;
+        padding-bottom: 2px;
+    }
+}
+
+.toast__ders {
+    color: #96979b;
+
+    @include mobile {
+        font-size: 12px;
+    }
+}
+
+.toast__icon {
+    font-size: 30px;
+
+    @include mobile {
+        font-size: 20px;
+        padding-right: 8px;
+    }
+}
+
+.toast__icon-close {
+    color: #ccc;
+    font-size: 25px;
+    cursor: pointer;
+
+    @include mobile {
+        font-size: 20px;
+        padding-right: 0px;
+    }
+}
+
+/* toast--success */
+.toast--success {
+    border-left: 5px solid rgb(45, 187, 45);
+}
+
+.toast__icon-success {
+    color: rgb(45, 187, 45);
+}
+
+/* toast warn */
+
+.toast--warn {
+    border-left: 5px solid orange;
+}
+
+.toast__icon-warn {
+    color: orange;
+}
+
+/* toast__info */
+.toast--info {
+    border-left: 5px solid #2f86eb;
+}
+
+.toast__icon-info {
+    color: #2f86eb;
+}
 .main {
     display: none;
     padding: 30px 40px;
     @include mobile {
-        padding: 10px;
+        padding: 6px;
     }
 
-    .toast-container {
-        position: fixed;
-        top: 100px;
-        right: 40px;
-        z-index: 1;
-
-        @include mobile {
-            right: 20px;
-        }
-    }
-
-    .toast {
-        display: flex;
-        /* justify-content: center; */
-        align-items: center;
-        padding: 12px 15px;
-        border-radius: 3px;
-        box-shadow: 0 0 10px 5px #ccc;
-        /* min-width: 300px; */
-        width: 350px;
-        background-color: white;
-        transition: all linear 0.3s;
-
-        @include mobile {
-            width: 230px;
-            padding: 8px;
-        }
-    }
-
-    .toast + .toast {
-        margin-top: 30px;
-    }
-
-    @keyframes slideInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(calc(100% + 40px));
-        }
-
-        to {
-            opacity: 1;
-            transform: 0;
-        }
-    }
-
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-        }
-    }
-
-    .toast__content {
-        flex-grow: 1;
-        padding-left: 20px;
-        padding-right: 40px;
-
-        @include mobile {
-            padding: 0;
-        }
-    }
-
-    .toast__header {
-        padding-bottom: 5px;
-        color: black;
-
-        @include mobile {
-            font-size: 13px;
-            padding-bottom: 2px;
-        }
-    }
-
-    .toast__ders {
-        color: #96979b;
-
-        @include mobile {
-            font-size: 12px;
-        }
-    }
-
-    .toast__icon {
-        font-size: 30px;
-
-        @include mobile {
-            font-size: 20px;
-            padding-right: 8px;
-        }
-    }
-
-    .toast__icon-close {
-        color: #ccc;
-        font-size: 25px;
-        cursor: pointer;
-
-        @include mobile {
-            font-size: 20px;
-            padding-right: 0px;
-        }
-    }
-
-    /* toast--success */
-    .toast--success {
-        border-left: 5px solid rgb(45, 187, 45);
-    }
-
-    .toast__icon-success {
-        color: rgb(45, 187, 45);
-    }
-
-    /* toast warn */
-
-    .toast--warn {
-        border-left: 5px solid orange;
-    }
-
-    .toast__icon-warn {
-        color: orange;
-    }
-
-    /* toast__info */
-    .toast--info {
-        border-left: 5px solid #2f86eb;
-    }
-
-    .toast__icon-info {
-        color: #2f86eb;
-    }
 }
 
 .opacity {
@@ -183,13 +184,15 @@ html {
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: url('/img/bgc2.jpg');
+    background-image: url('/img/iot_2.webp');
     opacity: 0.5;
-    background-position: center;
+    // background-position: center;
     /* Center the image */
-    background-repeat: no-repeat;
-    /* Do not repeat the image */
-    background-size: cover;
+    background-position: left;
+        /* Center the image */
+        background-repeat: no-repeat;
+        /* Do not repeat the image */
+        background-size: cover;
     /* Resize the background image to cover the entire container */
 }
 
@@ -252,16 +255,21 @@ html {
     left: 0;
     right: 0;
     top: 10%;
+    .btn_create_account {
+        margin: 0 !important;
+        
+    }
     .loggin_title {
         text-align: center;
-            color: black;
+            color: white;
             margin-bottom: 20px;
             font-size: 30px;
     }
     .container {
         position: relative;
         border-radius: 10px;
-        background-color: #f2f2f2;
+        // background-color: #f2f2f2;
+        background-color: transparent;
 
         border: 1px solid white;
         padding: 20px 0 30px 0;
@@ -383,6 +391,7 @@ html {
     }
     @include mobile {
         .loggin_title {
+            
             font-size: 20px;
         }
         .container {
@@ -459,6 +468,7 @@ html {
         margin-top: 10px;
         font-weight: normal;
         @include mobile {
+            margin-top: 5px;
             font-size: 14px;
             }
     }
@@ -486,9 +496,13 @@ html {
         .name_user {
             margin-right: 30px;
             font-size: 20px;
+            white-space: nowrap;
+                // width: 50px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             @include mobile {
-                    font-size: 10px;
-                    margin-right: 5px;
+                    font-size: 16px;
+                        margin-right: 13px;
             }
         }
 
@@ -530,7 +544,7 @@ html {
 
         // margin-top:70px ;
         @include mobile {
-            margin-top: 40px;
+            // margin-top: 40px;
         }
 
         .chart {
