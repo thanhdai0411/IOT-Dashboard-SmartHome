@@ -32,14 +32,19 @@ Grove = GroveLightSensor
 
 
 ultra_1_in = GroveUltrasonicRanger(5)
+
 ultra_1_out = GroveUltrasonicRanger(16)
+
+
 servo_cong  = GroveServo(12)
-servo_cua  = GroveServo(18)
 
 sensor_light = GroveLightSensor(0)
 led_cong = LED(24)
+
 led_room_1 = LED(22)
 led_room_2 = LED(26)
+led_room_3 = LED(23)
+led_room_4 = LED(18)
 
 
 
@@ -66,6 +71,14 @@ def on_message(client, userdata, message):
         led_room_2.on() 
     elif(message.payload.decode("utf-8") == "OFF_1"):
         led_room_2.off() 
+    elif(message.payload.decode("utf-8") == "ON_2"):
+        led_room_3.on() 
+    elif(message.payload.decode("utf-8") == "OFF_2"):
+        led_room_3.off()
+    elif(message.payload.decode("utf-8") == "ON_3"):
+        led_room_4.on() 
+    elif(message.payload.decode("utf-8") == "OFF_3"):
+        led_room_4.off() 
 ########################################
 
 client = mqtt.Client("client_node1") #create new instance
@@ -90,8 +103,10 @@ sock.connect((HOST, PORT))
 
 while True :
     distance_out = ultra_1_out.get_distance()
+    time.sleep(0.1)
     distance_in = ultra_1_in.get_distance()
     value_light = sensor_light.light
+    servo_cong.setAngle(135)
 
     #####################################################
    
@@ -104,15 +119,14 @@ while True :
     #####################################################
     
     if(int(distance_in) < 5 or int(distance_out) < 5 ) :
-        servo_cong.setAngle(90)  
+        servo_cong.setAngle(180)  
     else:
-        servo_cong.setAngle(0)
+        servo_cong.setAngle(135)
         
     if(value_light < 100) :
         led_cong.on() 
     elif (value_light > 600) :
         led_cong.off()
-
 
     #####################################################
 
@@ -124,7 +138,7 @@ while True :
     data_1 = (value_light & 0xff00) >> 8
     data_2 = (value_light & 0xff)
     #print(data_1, data_2)
-    
+
     crc = start_byte + id_frame + cmd + length + stop_byte + data_1 + data_2
 
     crc_h = (crc & 0xff00) >> 8
@@ -139,8 +153,10 @@ while True :
     data = sock.recv(1024) 
     print("Data Server: {}".format(data))
     if(data[0] == 9) :
+
         print("Succesfull!!")
         sock.sendall(b"OK") 
+
     else:
         print("Fail")
         sock.sendall(frame_trans) 

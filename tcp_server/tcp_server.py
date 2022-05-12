@@ -2,7 +2,7 @@ import socket
 from threading import Thread
 from time import sleep
 import paho.mqtt.client as mqtt #import the client1
-import numpy as np
+
 
 #HOST = "127.0.0.1" #(localhost)
 HOST = "192.168.1.43" #Server IP
@@ -16,10 +16,11 @@ client_mqtt.connect("broker.hivemq.com") #connect to broker
 
 #####################################
 
-def _mqtt_node_2(data_1,data_2,data_3):
+def _mqtt_node_2(data_1,data_2,data_3, time):
     client_mqtt.publish("Data_sensor_humi",data_1)
     client_mqtt.publish("Data_sensor_temp",data_2)
     client_mqtt.publish("Data_sensor_rain",data_3)
+    client_mqtt.publish("Data_time_node2",time)
 
 
 def _mqtt_node_1(data):
@@ -84,19 +85,24 @@ def client(conn, addr):
 
             crc_node2_h = data[8]
             crc_node2_l = data[9]
+            time_h = data[10]
+            time_l = data[11]
 
-            stop_node1 = data[10]
+            stop_node1 = data[12]
 
             value_sensor_rain = data_rain_h * 256 + data_rain_l
 
             crc_client_node_2 = crc_node2_h * 256 + crc_node2_l
+            
+            time_local = time_h  * 256 + time_l
+            # print(f"Time: {time_local}")
 
-            crc_check_server = start_node1 +  id_frame_node1 + cmd_node1 + length_node1 + data_rain_h + data_rain_l +data_temp+data_humi + stop_node1
+            crc_check_server = start_node1 +  id_frame_node1 + cmd_node1 + length_node1 + data_rain_h + data_rain_l +data_temp+data_humi + stop_node1 + time_l + time_h
 
 
             if(crc_client_node_2 == crc_check_server ) :
                 print(f"Node_2: {data}")
-                _mqtt_node_2(data_humi,data_temp,value_sensor_rain )
+                _mqtt_node_2(data_humi,data_temp,value_sensor_rain,time_local)
                 conn.sendall(bytearray([9])) 
             else:
                 conn.sendall(bytearray([8]))

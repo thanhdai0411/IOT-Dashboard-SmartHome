@@ -26,12 +26,15 @@ import {
     createUserWithEmailAndPassword,
     updateProfile,
     signInWithEmailAndPassword,
+    FacebookAuthProvider,
     signOut,
     setPersistence,
     browserSessionPersistence,
 } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
 
 const provider = new GoogleAuthProvider();
+
+const provider_FB = new FacebookAuthProvider();
 const auth = getAuth();
 
 // toast message
@@ -134,6 +137,8 @@ const registerForm = document.querySelector('.register_form');
 const btnCreateAccount = document.querySelector('.btn_create_account');
 const btnLogin = document.querySelector('.btn_login');
 const buttonGG = document.querySelector('.google');
+const buttonFB = document.querySelector('.fb');
+
 const inputUsername = document.querySelector('.input_username');
 const inputEmail = document.querySelector('.input_email');
 const inputPWD = document.querySelector('.input_pwd');
@@ -150,10 +155,18 @@ const nameUser = document.querySelector('.name_user');
 const title_dashboard = document.querySelector('.title_dashboard');
 const avtUser = document.querySelector('.avt-user');
 
-const authSuccess = () => {
+const btnBackLogin = document.querySelector('.btn_back_login');
+const time_1 = document.querySelector('.time_1');
+
+const authSuccess = (user) => {
     mainPage.style.display = 'block';
     loginForm.style.display = 'none';
+    registerForm.style.display = 'none';
     opacity.style.display = 'none';
+
+    nameUser.innerHTML = user.displayName;
+    title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
+    if (user.photoURL != null) avtUser.src = user.photoURL;
 };
 
 const authFail = () => {
@@ -162,24 +175,19 @@ const authFail = () => {
     opacity.style.display = 'block';
 };
 
-auth.onAuthStateChanged(function (user) {
-    if (user) {
-        authSuccess();
-        console.log('User login: ', user.displayName);
-        nameUser.innerHTML = user.displayName;
-        title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
-        if (user.photoURL != null) avtUser.src = user.photoURL;
-    }
-});
-
 btnRegister.onclick = () => {
     loginForm.style.display = 'none';
     registerForm.style.display = 'block';
 };
 
+btnBackLogin.onclick = () => {
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+};
+
 btnCreateAccount.onclick = () => {
     createUserWithEmailAndPassword(auth, inputEmail.value, inputPWD.value)
-        .then((userCredential) => {
+        .then((result) => {
             // Signed in
 
             updateProfile(auth.currentUser, {
@@ -188,8 +196,11 @@ btnCreateAccount.onclick = () => {
                 .then(() => {
                     // alert('Dang k itahnh cong');
                     isSuccessToast('Thành Công', 'Đăng ký thành công', 3000);
-                    loginForm.style.display = 'block';
-                    registerForm.style.display = 'none';
+                    let user = result.user;
+                    authSuccess(user);
+                    // createSuccess = true;
+                    // loginForm.style.display = 'none';
+                    // registerForm.style.display = 'none';
 
                     // ...
                 })
@@ -199,23 +210,11 @@ btnCreateAccount.onclick = () => {
                 });
         })
         .catch((error) => {
+            isWarnToast('Thất Bại', error.message, 3000);
             // alert(error.message);
         });
 };
-setPersistence(auth, browserSessionPersistence)
-    .then(() => {
-        // Existing and future Auth states are now persisted in the current
-        // session only. Closing the window would clear any existing state even
-        // if a user forgets to sign out.
-        // ...
-        // New sign-in will be persisted with session persistence.
-        return signInWithEmailAndPassword(auth, email, password);
-    })
-    .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-    });
+
 buttonGG.onclick = () => {
     signInWithPopup(auth, provider)
         .then((result) => {
@@ -223,17 +222,32 @@ buttonGG.onclick = () => {
 
             const user = result.user;
             console.log(user);
-            authSuccess();
-            // const name = localStorage.getItem('user');
-            nameUser.innerHTML = user.displayName;
-            title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
+            authSuccess(user);
             avtUser.src = user.photoURL;
+
             // ...
         })
         .catch((error) => {
-            isWarnToast('Thất Bại', 'Đăng nhập không thành công', 3000);
+            isWarnToast('Thất Bại', error.message, 3000);
         });
 };
+
+// buttonFB.onclick = () => {
+//     signInWithPopup(auth, provider_FB)
+//         .then((result) => {
+//             const user = result.user;
+//             isSuccessToast('Thành Công', 'Đăng nhập thành công', 3000);
+//             authSuccess(user);
+//             console.log('User FB: ', user);
+//             avtUser.src = user.photoURL;
+
+//             // The signed-in user info.
+//         })
+//         .catch((error) => {
+//             // Handle Errors here.
+//             isWarnToast('Thất Bại', error.message, 3000);
+//         });
+// };
 
 btnLogin.onclick = () => {
     signInWithEmailAndPassword(auth, inputLoginEmail.value, inputLoginPWD.value)
@@ -241,24 +255,22 @@ btnLogin.onclick = () => {
             console.log('dang nhap thanh cog');
             isSuccessToast('Thành Công', 'Đăng nhập thành công', 3000);
             const user = result.user;
-            localStorage.setItem('user', user.displayName);
-            authSuccess();
-            nameUser.innerHTML = user.displayName;
-            title_dashboard.innerHTML = `Hey ! ${user.displayName}`;
 
+            authSuccess(user);
+
+            loginSuccess = true;
             // ...
         })
         .catch((error) => {
             console.log('dang nhap that bai');
-            isWarnToast('Thất Bại', 'Đăng nhập không thành công', 3000);
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
+            isWarnToast('Thất Bại', error.message, 3000);
         });
 };
 
 btnLogOut.onclick = () => {
     signOut(auth)
         .then(() => {
+            // loginSuccess = false;
             authFail();
         })
         .catch((error) => {
@@ -266,11 +278,18 @@ btnLogOut.onclick = () => {
         });
 };
 
+auth.onAuthStateChanged(function (user) {
+    
+    if (user) {
+        authSuccess(user);
+        console.log('User login: ', user.displayName);
+
+        if (user.photoURL != null) avtUser.src = user.photoURL;
+    }
+});
+
 // end loggin
 
-// load-info-user
-
-// end load-info-user
 // chart
 
 /// theme chart
@@ -545,13 +564,13 @@ chart = new Highcharts.Chart({
         {
             name: 'Temperature',
             data: [],
-            color: {
-                radialGradient: { cx: 0.5, cy: 0.5, r: 0.5 },
-                stops: [
-                    [0, '#003399'],
-                    [1, '#3366AA'],
-                ],
-            },
+            // color: {
+            //     radialGradient: { cx: 0.5, cy: 0.5, r: 0.5 },
+            //     stops: [
+            //         [0, '#003399'],
+            //         [1, '#3366AA'],
+            //     ],
+            // },
         },
     ],
 });
@@ -790,6 +809,7 @@ function makeid() {
 }
 
 var client = new Paho.MQTT.Client('broker.hivemq.com', 8000, makeid());
+// var message = new Paho.MQTT.Message('123');
 
 // set callback handlers
 client.onConnectionLost = onConnectionLost;
@@ -825,6 +845,7 @@ function onConnect() {
     client.subscribe('Data_sensor_rain');
     client.subscribe('Data_sensor_light');
     client.subscribe('Data_esp');
+    client.subscribe('Data_time_node2');
 }
 
 // called when the client loses its connection
@@ -848,6 +869,9 @@ function onMessageArrived(message) {
         dataChartLight(parseInt(message.payloadString));
     } else if (message.destinationName == 'Data_sensor_rain') {
         dataChartRain(parseInt(message.payloadString));
+    } else if (message.destinationName == 'Data_time_node2') {
+        time_1.innerHTML = `${message.payloadString[0]} : ${message.payloadString[1]}${message.payloadString[2]} `;
+
     } else if (message.destinationName == 'Data_esp') {
         console.log('ESP Control');
         if (parseInt(message.payloadString) == 2) {
@@ -861,15 +885,17 @@ function onMessageArrived(message) {
 
     //////////////////////////
 
-    // if (message.destinationName == 'Data_sensor_node1_1') {
-    //     dataChartTemperature(parseInt(message.payloadString));
-    // } else if (message.destinationName == 'Data_sensor_node1_2') {
-    //     dataChartHumidity(parseInt(message.payloadString));
-    // }
+    if (message.destinationName == 'test') {
+        console.log(
+            '>>>>>>>>>  ' + message.destinationName + ': ' + message.payloadString
+        );
+    }
 }
+// let message ;
 
 function public_message(topic, data) {
-    message = new Paho.MQTT.Message(data);
+    var message = new Paho.MQTT.Message(data);
+
     message.destinationName = topic;
     client.send(message);
 }

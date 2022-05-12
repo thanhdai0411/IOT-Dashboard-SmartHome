@@ -146,7 +146,7 @@ html {
   right: 0;
   bottom: 0;
   left: 0;
-  background-image: url("/img/iot_2.webp");
+  background-image: url("../img/iot_2.webp");
   opacity: 0.5;
   /* Center the image */
   background-position: left;
@@ -205,9 +205,6 @@ html {
   /* text inside the vertical line */
   /* hide some text on medium and large screens */
   /* bottom container */ }
-  .login_form .btn_create_account,
-  .register_form .btn_create_account {
-    margin: 0 !important; }
   .login_form .loggin_title,
   .register_form .loggin_title {
     text-align: center;
@@ -249,13 +246,11 @@ html {
   .login_form .fb,
   .register_form .fb {
     background-color: #3b5998;
-    color: white;
-    margin-right: 5px; }
+    color: white; }
   .login_form .google,
   .register_form .google {
     background-color: #dd4b39;
-    color: white;
-    margin-left: 5px; }
+    color: white; }
   .login_form .button_group,
   .register_form .button_group {
     display: flex; }
@@ -510,7 +505,8 @@ html {
         box-shadow: 0px 0px 15px #fa7d74; }
         @media (max-width: 480px) {
           .body .container .device .device_detail .device_content:nth-child(3) {
-            margin: 0; } }
+            margin: 0;
+            margin-bottom: 8px; } }
       .body .container .device .device_detail .device_content:nth-child(1) {
         background-image: linear-gradient(180deg, #33caba 0%, #2baa5d 100%);
         box-shadow: 0px 0px 15px #33caba; }
@@ -520,8 +516,31 @@ html {
             margin-right: 0;
             margin-bottom: 8px; } }
       .body .container .device .device_detail .device_content:nth-child(4) {
+        margin-right: 30px;
         background-color: #7a40f2;
         box-shadow: 0px 0px 15px #7a40f2; }
+        @media (max-width: 480px) {
+          .body .container .device .device_detail .device_content:nth-child(4) {
+            margin: 0;
+            margin-right: 0;
+            margin-bottom: 8px; } }
+      .body .container .device .device_detail .device_content:nth-child(5) {
+        margin-right: 30px;
+        background-color: #7a40f2;
+        box-shadow: 0px 0px 15px #7a40f2; }
+        @media (max-width: 480px) {
+          .body .container .device .device_detail .device_content:nth-child(5) {
+            margin: 0;
+            margin-right: 0;
+            margin-bottom: 8px; } }
+      .body .container .device .device_detail .device_content:nth-child(6) {
+        background-color: #7a40f2;
+        box-shadow: 0px 0px 15px #7a40f2; }
+        @media (max-width: 480px) {
+          .body .container .device .device_detail .device_content:nth-child(6) {
+            margin: 0;
+            margin-right: 0;
+            margin-bottom: 8px; } }
       .body .container .device .device_detail .device_content {
         width: 25%;
         padding: 15px 20px;

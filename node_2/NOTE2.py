@@ -55,70 +55,6 @@ LED_INVERT     = False   # True to invert the signal (when using NPN transistor 
 
 ###############################################################################
 
-
-
-############################################################
-a = 0 
-def on_connect(client, userdata, flags, rc):
-    
-    client.subscribe("Data_control")
-    # client.publish("IoT_Mqtt","Client Python")
-
-def on_disconnect(client, userdata, rc):
-    print("Disconnected From Broker")
-
-def on_message(client, userdata, message):
-    print(message.topic+ ": " + str(message.payload.decode("utf-8")))
-    
-    #print(message.payload.decode("utf-8"))
-    a = 0
-    if(message.payload.decode("utf-8") == "ON_2") :
-       
-        colorWipe(strip, Color(255, 0, 0))  # Red wipe
-        colorWipe(strip, Color(0, 255, 0))  # Blue wipe
-        colorWipe(strip, Color(0, 0, 255))  # Green wipe
-        theaterChase(strip, Color(127, 127, 127))  # White theater chase
-        theaterChase(strip, Color(127,   0,   0))  # Red theater chase
-        theaterChase(strip, Color(  0,   0, 127))  # Blue theater chase
-        rainbow(strip)
-        rainbowCycle(strip)
-        theaterChaseRainbow(strip)
-        
-
-        
-    elif(message.payload.decode("utf-8") == "OFF_2"):
-        a = 1 
-        theaterChase(strip, Color(0, 0, 0))
-
-
-    elif(message.payload.decode("utf-8") == "ON_3") :
-        led.setcolourred()
-        time.sleep(1)
-        led.setcolourgreen()
-        time.sleep(1)
-        led.setcolourblue()
-        time.sleep(1)
-        
-    elif(message.payload.decode("utf-8") == "OFF_3"):
-       led.setcolouroff()
-
-########################################
-
-client = mqtt.Client("client_node2") #create new instance
-
-client.on_connect = on_connect
-client.on_disconnect = on_disconnect
-client.on_message = on_message #attach function to callback
-
-client.connect("broker.hivemq.com") #connect to broker
-
-client.loop_start()   
-
-
-
-#####################################################
-
-
 ###############################################################################
 
 
@@ -517,6 +453,71 @@ class GroveLightSensor:
         value = self.adc.read(self.channel)
         return value
 #####################################################
+
+
+############################################################
+
+def on_connect(client, userdata, flags, rc):
+    
+    client.subscribe("Data_control")
+    # client.publish("IoT_Mqtt","Client Python")
+
+def on_disconnect(client, userdata, rc):
+    print("Disconnected From Broker")
+
+def on_message(client, userdata, message):
+    print(message.topic+ ": " + str(message.payload.decode("utf-8")))
+    
+    #print(message.payload.decode("utf-8"))
+    if(message.payload.decode("utf-8") == "ON_4") :
+        i = 1
+        while(i <= 2):
+            print(i)
+            i += 1
+            colorWipe(strip, Color(255, 0, 0))  # Red wipe
+            colorWipe(strip, Color(0, 255, 0))  # Blue wipe
+            colorWipe(strip, Color(0, 0, 255))  # Green wipe
+            #print ('Theater chase animations.')
+            theaterChase(strip, Color(127, 127, 127))  # White theater chase
+            theaterChase(strip, Color(127,   0,   0))  # Red theater chase
+            theaterChase(strip, Color(  0,   0, 127))  # Blue theater chase
+            #print ('Rainbow animations.')
+            rainbow(strip)
+            rainbowCycle(strip)
+            theaterChaseRainbow(strip)
+    elif(message.payload.decode("utf-8") == "OFF_4") :
+        theaterChase(strip, Color(0, 0, 0))
+
+    elif(message.payload.decode("utf-8") == "ON_5") :
+        led.setcolourred()
+        time.sleep(0.2)
+        led.setcolourgreen()
+        time.sleep(0.2)
+        led.setcolourblue()
+        time.sleep(0.2)
+    elif(message.payload.decode("utf-8") == "OFF_5") :
+        led.setcolouroff()
+            
+ 
+    
+########################################
+
+client = mqtt.Client("client_node2") #create new instance
+
+client.on_connect = on_connect
+client.on_disconnect = on_disconnect
+client.on_message = on_message #attach function to callback
+
+client.connect("broker.hivemq.com") #connect to broker
+
+client.loop_start()   
+
+
+
+
+
+
+
  
 #####################################################
 
@@ -548,9 +549,12 @@ input = GPIO1.input(16)
 GPIO1.setup(22,GPIO1.IN)
 input = GPIO1.input(22)
 
-count_time = 0 
+
 while True:
-    count_time = count_time + 1 
+    
+
+    angle = 45
+    servo.setAngle(angle)
     #switch1.when_pressed = switch1_press
     #switch1.when_released = switch1_release
 
@@ -573,17 +577,16 @@ while True:
         theaterChase(strip, Color(0, 0, 0))
     
     if (GPIO1.input(22)):
-        if(count_time == 1) :
-            led.setcolourred()
-        if(count_time == 2) :
-            led.setcolourgreen()
-        if(count_time == 3) :
-            led.setcolourblue()
-            count_time = 0
+        led.setcolourred()
+        time.sleep(0.2)
+        led.setcolourgreen()
+        time.sleep(0.2)
+        led.setcolourblue()
+        time.sleep(0.2)
         #time.sleep(1)
     else:
         led.setcolouroff()
-        count_time = 0
+        
 
     value_rain = sensor.value
 
@@ -591,18 +594,19 @@ while True:
     display.show(t)
     display.set_colon(count & 1)
     count += 1
+    print(t)
     
     
     # time.sleep(1)
     if (value_rain < 200):
         print("{}, Detected Water.".format(value_rain))
-        angle = 90
+        angle = 120
         servo.setAngle(angle)
         print('{}degree.'.format(angle))
         # time.sleep(1)
     else:
         print("{}, Dry.".format(value_rain))
-        angle1 = 0
+        angle1 = 45
         servo.setAngle(angle1)
         print('{}degree.'.format(angle1))
         # time.sleep(1)   
@@ -623,21 +627,25 @@ while True:
     data_2_rain = (value_rain & 0xff)
     data_temp = temp 
     data_humi = humi
+    # time = int(t) 
+
+    time_h = (int(t)  & 0xff00) >> 8
+    time_l = (int(t)  & 0xff)
     #print(data_1, data_2)
     
-    crc = start_byte + id_frame + cmd + length + stop_byte + data_1_rain + data_2_rain + data_temp + data_humi
+    crc = start_byte + id_frame + cmd + length + stop_byte + data_1_rain + data_2_rain + data_temp + data_humi + time_h +  time_l
 
     crc_h = (crc & 0xff00) >> 8
     crc_l = (crc & 0xff)
 
-    frame_trans = bytearray([start_byte, id_frame, cmd , length, data_1_rain, data_2_rain , data_temp, data_humi, crc_h, crc_l, stop_byte])
+    frame_trans = bytearray([start_byte, id_frame, cmd , length, data_1_rain, data_2_rain , data_temp, data_humi, crc_h, crc_l,time_h, time_l, stop_byte])
 
 
     sock.sendall(frame_trans)
 
 
     data = sock.recv(1024) 
-    print("Data Server: {}".format(data))
+    # print("Data Server: {}".format(data))
     if(data[0] == 9) :
         print(">> Succesfull!!")
         sock.sendall(b"OK") 
