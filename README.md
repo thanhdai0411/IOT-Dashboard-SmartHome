@@ -1,2 +1,2 @@
 # SMART HOME
-![](/img/SODOHETHONG.jpg)
+![smart_home](/img/SODOHETHONG.jpg)
